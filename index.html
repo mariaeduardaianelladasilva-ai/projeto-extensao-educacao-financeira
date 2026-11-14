@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Educação Financeira na Prática — Projeto de Extensão | Universidade Cruzeiro do Sul</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Chart.js para gráficos acadêmicos interativos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          },
+          colors: {
+            navy: {
+              950: '#060F1E',
+              900: '#0A192F',
+              800: '#112240',
+              700: '#1D3557',
+            },
+            emerald: {
+              500: '#10B981',
+              600: '#059669',
+              700: '#047857',
+            },
+            gold: {
+              400: '#FBBF24',
+              500: '#D4AF37',
+              600: '#B48E24',
+            },
+            ods10: '#DD1367'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Padrão sutil de malha financeira no fundo */
+    .bg-grid-pattern {
+      background-image: radial-gradient(rgba(212, 175, 55, 0.12) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    .bg-grid-light {
+      background-image: radial-gradient(rgba(10, 25, 47, 0.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    /* Animações suaves de revelação */
+    .reveal-section {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-section.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Barra de rolagem elegante */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0A192F;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1D3557;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #10B981;
+    }
+
+    /* Efeito de brilho sutil dourado/esmeralda */
+    .card-elevated {
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .card-elevated:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 35px -10px rgba(10, 25, 47, 0.12);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-emerald-500 selection:text-white">
+
+  <!-- Barra de Progresso Superior Fixa -->
+  <div class="fixed top-0 left-0 right-0 z-50 h-1.5 bg-navy-950/80 backdrop-blur">
+    <div id="topProgressBar" class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-gold-500 transition-all duration-300" style="width: 14.28%;"></div>
+  </div>
+
+  <!-- Navegação Institucional Fixa -->
+  <header class="fixed top-1.5 left-0 right-0 z-40 bg-navy-900/95 backdrop-blur-md border-b border-white/10 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+      
+      <!-- Identificação Institucional Compacta -->
+      <a href="#secao-1" class="flex items-center gap-3 group shrink-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-md shadow-emerald-500/20 group-hover:scale-105 transition">
+          <i data-lucide="trending-up" class="w-5 h-5 text-white"></i>
+        </div>
+        <div class="hidden sm:block text-left">
+          <p class="text-[11px] uppercase tracking-wider text-gold-400 font-semibold leading-none">Cruzeiro do Sul • Administração</p>
+          <p class="text-xs text-slate-300 font-medium mt-1">Extensão Universitária • ODS 10</p>
+        </div>
+      </a>
+
+      <!-- Links de Navegação dos Capítulos -->
+      <nav aria-label="Navegação dos capítulos" class="hidden lg:flex items-center gap-1 bg-navy-800/80 p-1 rounded-xl border border-white/10">
+        <button onclick="goToSlide(0)" data-nav="0" class="nav-pill px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-emerald-600 text-white">1. Capa</button>
+        <button onclick="goToSlide(1)" data-nav="1" class="nav-pill px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-white/5">2. Diagnóstico</button>
+        <button onclick="goToSlide(2)" data-nav="2" class="nav-pill px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-white/5">3. Solução</button>
+        <button onclick="goToSlide(3)" data-nav="3" class="nav-pill px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-white/5">4. Execução</button>
+        <button onclick="goToSlide(4)" data-nav="4" class="nav-pill px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-white/5">5. Resultados</button>
+        <button onclick="goToSlide(5)" data-nav="5" class="nav-pill px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-white/5">6. Conclusão</button>
+        <button onclick="goToSlide(6)" data-nav="6" class="nav-pill px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-white/5">7. Encerramento</button>
+      </nav>
+
+      <!-- Controles de Apresentação (Indicador + Tela Cheia) -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span id="slideCounterBadge" class="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-emerald-300 tracking-wide">
+          Slide 1 / 7
+        </span>
+
+        <button id="fullscreenBtn" onclick="toggleFullscreen()" title="Alternar Tela Cheia" class="p-2.5 rounded-xl bg-white/10 hover:bg-emerald-600 text-slate-200 hover:text-white border border-white/10 transition flex items-center gap-1.5 text-xs font-medium">
+          <i data-lucide="maximize-2" id="fullscreenIcon" class="w-4 h-4"></i>
+          <span class="hidden md:inline" id="fullscreenText">Tela Cheia</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Controles Flutuantes de Apresentação (Anterior / Próximo / Início) -->
+  <div class="fixed bottom-5 right-5 z-40 flex items-center gap-2 bg-navy-900/95 backdrop-blur-md p-2 rounded-2xl border border-white/15 shadow-2xl">
+    <button onclick="goToSlide(0)" title="Voltar ao Início" class="p-2.5 rounded-xl text-slate-300 hover:text-gold-400 hover:bg-white/10 transition" aria-label="Voltar ao início">
+      <i data-lucide="home" class="w-4 h-4"></i>
+    </button>
+    <div class="h-5 w-px bg-white/15"></div>
+    <button id="prevSlideBtn" onclick="prevSlide()" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold flex items-center gap-1.5 transition">
+      <i data-lucide="chevron-left" class="w-4 h-4"></i>
+      <span class="hidden sm:inline">Anterior</span>
+    </button>
+    <button id="nextSlideBtn" onclick="nextSlide()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold flex items-center gap-1.5 shadow-lg shadow-emerald-600/30 transition">
+      <span class="hidden sm:inline">Avançar</span>
+      <i data-lucide="chevron-right" class="w-4 h-4"></i>
+    </button>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- SEÇÃO 1 — CAPA                                                        -->
+  <!-- ===================================================================== -->
+  <section id="secao-1" data-slide="0" class="slide-section min-h-screen pt-24 pb-16 bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800 text-white relative overflow-hidden flex items-center bg-grid-pattern">
+    <!-- Elementos Decorativos Geométricos e Financeiros -->
+    <div class="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 -left-24 w-80 h-80 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+      <div class="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        
+        <!-- Coluna Principal da Capa -->
+        <div class="lg:col-span-7 space-y-6">
+          <!-- Selos Institucionais -->
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-gold-500/40 text-gold-400 text-xs font-semibold tracking-wide uppercase">
+              <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+              Universidade Cruzeiro do Sul
+            </span>
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ods10/20 border border-ods10/60 text-pink-200 text-xs font-semibold tracking-wide">
+              <span class="w-2.5 h-2.5 rounded-full bg-ods10 animate-pulse"></span>
+              ODS 10 — Redução das Desigualdades
+            </span>
+          </div>
+
+          <!-- Subtítulo Acadêmico -->
+          <p class="text-emerald-400 font-display font-semibold tracking-wider uppercase text-sm sm:text-base">
+            Projeto de Extensão Universitária — Administração
+          </p>
+
+          <!-- Título Principal -->
+          <h1 class="font-display font-extrabold text-3xl sm:text-5xl lg:text-[3.35rem] leading-[1.15] tracking-tight text-white">
+            Educação Financeira na Prática: <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Democratizando o Controle Orçamentário</span>
+          </h1>
+
+          <p class="text-slate-300 text-base sm:text-lg max-w-2xl leading-relaxed">
+            Intervenção extensionista voltada à autonomia financeira familiar, prevenção ao endividamento e inclusão socioeconômica por meio de ferramentas práticas de gestão orçamentária.
+          </p>
+
+          <!-- Cartão de Identificação da Autoria -->
+          <div class="p-4 sm:p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm max-w-xl">
+            <div class="grid sm:grid-cols-2 gap-4 items-center">
+              <div>
+                <span class="text-[11px] uppercase tracking-wider text-slate-400 block">Apresentação por</span>
+                <div class="flex items-center gap-2 mt-1">
+                  <strong id="studentNameDisplay" class="text-white font-semibold text-base">Maria Eduarda Ianella Da Silva</strong>
+                  <button onclick="openEditNameModal()" title="Editar nome da estudante" class="p-1.5 rounded-lg bg-white/10 hover:bg-gold-500/20 text-gold-400 transition">
+                    <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="sm:border-l sm:border-white/10 sm:pl-4">
+                <span class="text-[11px] uppercase tracking-wider text-slate-400 block">Curso & Período</span>
+                <p class="text-slate-200 font-medium text-sm mt-1">Bacharelado em Administração • <span class="text-emerald-400 font-semibold">Novembro de 2026</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botões de Ação da Capa -->
+          <div class="pt-2 flex flex-wrap items-center gap-4">
+            <button onclick="goToSlide(1)" class="px-7 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-navy-950 font-display font-bold text-base shadow-xl shadow-emerald-500/25 flex items-center gap-3 transition transform hover:-translate-y-0.5">
+              <span>Iniciar apresentação</span>
+              <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+            <span class="text-xs text-slate-400 flex items-center gap-1.5">
+              <i data-lucide="keyboard" class="w-4 h-4 text-gold-400"></i>
+              Use as setas <kbd class="px-1.5 py-0.5 bg-white/10 rounded text-slate-200">←</kbd> <kbd class="px-1.5 py-0.5 bg-white/10 rounded text-slate-200">→</kbd> do teclado para navegar
+            </span>
+          </div>
+        </div>
+
+        <!-- Coluna Visual: Painel Ilustrativo de Organização Financeira & ODS 10 -->
+        <div class="lg:col-span-5">
+          <div class="relative rounded-3xl bg-gradient-to-b from-white/10 to-white/[0.03] border border-white/15 p-6 sm:p-8 backdrop-blur-md shadow-2xl">
+            <!-- Cabeçalho do Painel Visual -->
+            <div class="flex items-center justify-between pb-5 border-b border-white/10">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-ods10 flex items-center justify-center font-display font-extrabold text-white text-lg shadow-lg">
+                  10
+                </div>
+                <div>
+                  <p class="text-xs text-pink-300 font-semibold uppercase tracking-wider">Agenda 2030 • ONU</p>
+                  <h2 class="font-display font-bold text-white text-base">Redução das Desigualdades</h2>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-lg bg-gold-500/20 text-gold-400 text-xs font-semibold border border-gold-500/30">
+                Impacto Social
+              </span>
+            </div>
+
+            <!-- Pilares Visuais da Intervenção -->
+            <div class="mt-6 space-y-4">
+              <div class="p-4 rounded-2xl bg-navy-950/60 border border-white/10 flex items-start gap-4">
+                <div class="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 shrink-0">
+                  <i data-lucide="pie-chart" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-white text-sm">Diagnóstico Comunitário</h3>
+                  <p class="text-xs text-slate-300 mt-1 leading-relaxed">Levantamento real sobre controle de gastos e formação de reserva de emergência.</p>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-navy-950/60 border border-white/10 flex items-start gap-4">
+                <div class="p-2.5 rounded-xl bg-gold-500/20 text-gold-400 shrink-0">
+                  <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-white text-sm">Ferramentas Práticas e Acessíveis</h3>
+                  <p class="text-xs text-slate-300 mt-1 leading-relaxed">Guia Prático Orçamentário (PDF) + Planilha Automatizada de Gestão Financeira.</p>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-navy-950/60 border border-white/10 flex items-start gap-4">
+                <div class="p-2.5 rounded-xl bg-sky-500/20 text-sky-400 shrink-0">
+                  <i data-lucide="handshake" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-white text-sm">Parceria Estratégica & Comunidade</h3>
+                  <p class="text-xs text-slate-300 mt-1 leading-relaxed">Atuação mediada no Mercado Livre e atendimento individualizado no ambiente familiar.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rodapé do Painel -->
+            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
+              <span>Itinerário Extensionista</span>
+              <span class="text-emerald-400 font-semibold">6 Capítulos Estruturados</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SEÇÃO 2 — DIAGNÓSTICO E O PROBLEMA                                    -->
+  <!-- ===================================================================== -->
+  <section id="secao-2" data-slide="1" class="slide-section min-h-screen py-24 bg-slate-50 bg-grid-light flex items-center border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full reveal-section">
+      
+      <!-- Cabeçalho da Seção -->
+      <div class="max-w-3xl mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-navy-900 text-gold-400 text-xs font-semibold uppercase tracking-wider mb-3">
+          <span>Capítulo 01 • Diagnóstico e o Problema</span>
+        </div>
+        <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-navy-900 tracking-tight">
+          O Cenário Encontrado na Comunidade
+        </h2>
+        <p class="text-slate-600 mt-3 text-base sm:text-lg leading-relaxed">
+          A investigação inicial permitiu compreender os hábitos financeiros reais da comunidade local, evidenciando lacunas críticas na organização do orçamento doméstico.
+        </p>
+      </div>
+
+      <!-- Grid Principal: Dados em Destaque + Gráficos + Análise -->
+      <div class="grid lg:grid-cols-12 gap-8 items-stretch">
+        
+        <!-- Coluna Esquerda: Indicadores Numéricos e Gráficos (7 colunas) -->
+        <div class="lg:col-span-7 flex flex-col gap-6">
+          
+          <!-- Cards com os Percentuais Exatos -->
+          <div class="grid sm:grid-cols-2 gap-6">
+            <!-- Dado 1: 57,2% -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm card-elevated relative overflow-hidden">
+              <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-bl-full"></div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="p-2.5 rounded-xl bg-amber-50 text-amber-600">
+                  <i data-lucide="clipboard-x" class="w-6 h-6"></i>
+                </span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Controle de Gastos</span>
+              </div>
+              <div class="font-display font-extrabold text-4xl sm:text-5xl text-navy-900">
+                57,2%
+              </div>
+              <p class="font-semibold text-slate-800 mt-2 text-sm sm:text-base">
+                Não possuem nenhum registro formal de despesas
+              </p>
+              <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                Mais da metade dos entrevistados acompanha os gastos apenas de maneira informal ou mental, perdendo a visibilidade real do orçamento.
+              </p>
+              <div class="mt-4 w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                <div class="bg-amber-500 h-full rounded-full" style="width: 57.2%"></div>
+              </div>
+            </div>
+
+            <!-- Dado 2: 38,1% -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm card-elevated relative overflow-hidden">
+              <div class="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-bl-full"></div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="p-2.5 rounded-xl bg-rose-50 text-rose-600">
+                  <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                </span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Segurança Financeira</span>
+              </div>
+              <div class="font-display font-extrabold text-4xl sm:text-5xl text-navy-900">
+                38,1%
+              </div>
+              <p class="font-semibold text-slate-800 mt-2 text-sm sm:text-base">
+                Não têm reserva de emergência
+              </p>
+              <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                Parcela expressiva das famílias encontra-se desprotegida diante de imprevistos médicos, domésticos ou oscilações de renda.
+              </p>
+              <div class="mt-4 w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                <div class="bg-rose-500 h-full rounded-full" style="width: 38.1%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gráfico Visual Comparativo (Chart.js) -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-sm flex-1 flex flex-col justify-between">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <div>
+                <h3 class="font-display font-bold text-navy-900 text-lg">Panorama dos Indicadores da Pesquisa Inicial</h3>
+                <p class="text-xs text-slate-500">Distribuição percentual identificada no diagnóstico comunitário</p>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium">Dados Reais do Diagnóstico</span>
+            </div>
+            <div class="relative h-56 w-full">
+              <canvas id="diagnosticChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna Direita: Público-Alvo, Problema e Conexão ODS 10 (5 colunas) -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+          
+          <!-- Card Público-Alvo -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="p-2.5 rounded-xl bg-navy-900 text-gold-400">
+                <i data-lucide="users" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-display font-bold text-navy-900 text-lg">Público-Alvo Atendido</h3>
+            </div>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              <strong class="text-navy-900">Trabalhadores locais, donas de casa e jovens adultos</strong>, com foco predominante na faixa etária entre <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold">25 e 40 anos</span>, responsáveis diretos pelas decisões financeiras de seus lares.
+            </p>
+          </div>
+
+          <!-- Card O Problema Identificado -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="p-2.5 rounded-xl bg-rose-50 text-rose-600">
+                <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-display font-bold text-navy-900 text-lg">O Problema Identificado</h3>
+            </div>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              A ausência de planejamento financeiro e de ferramentas acessíveis dificulta o controle do orçamento doméstico, aumenta a vulnerabilidade financeira e deixa as famílias mais expostas ao <strong class="text-navy-900">endividamento</strong> e aos <strong class="text-navy-900">juros abusivos</strong>.
+            </p>
+          </div>
+
+          <!-- Card Conexão com ODS 10 -->
+          <div class="bg-gradient-to-br from-navy-900 to-navy-800 text-white rounded-3xl p-6 sm:p-7 shadow-lg border border-navy-700 flex-1 flex flex-col justify-center">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-ods10 flex items-center justify-center font-display font-extrabold text-white text-sm shrink-0">
+                ODS 10
+              </div>
+              <div>
+                <span class="text-[11px] uppercase tracking-wider text-pink-300 font-semibold">Alinhamento Estratégico</span>
+                <h3 class="font-display font-bold text-white text-lg">Redução das Desigualdades</h3>
+              </div>
+            </div>
+            <p class="text-slate-200 text-sm leading-relaxed">
+              Democratizar o acesso à educação financeira significa oferecer conhecimento e ferramentas práticas para que pessoas de diferentes realidades socioeconômicas tenham <strong class="text-emerald-400">mais autonomia sobre seu dinheiro</strong>, rompendo ciclos de exclusão e vulnerabilidade econômica.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SEÇÃO 3 — A SOLUÇÃO PROPOSTA                                          -->
+  <!-- ===================================================================== -->
+  <section id="secao-3" data-slide="2" class="slide-section min-h-screen py-24 bg-white flex items-center border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full reveal-section">
+      
+      <!-- Cabeçalho da Seção -->
+      <div class="max-w-3xl mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold uppercase tracking-wider mb-3">
+          <span>Capítulo 02 • A Solução Proposta</span>
+        </div>
+        <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-navy-900 tracking-tight">
+          Ferramentas Desenvolvidas para a Intervenção
+        </h2>
+        <p class="text-slate-600 mt-3 text-base sm:text-lg leading-relaxed">
+          Para transformar a teoria da Administração em prática cotidiana acessível, foram desenvolvidas duas soluções complementares voltadas à realidade da comunidade.
+        </p>
+      </div>
+
+      <!-- Cards das Duas Soluções -->
+      <div class="grid lg:grid-cols-2 gap-8">
+        
+        <!-- SOLUÇÃO 1: GUIA PRÁTICO ORÇAMENTÁRIO (PDF) -->
+        <div class="rounded-3xl bg-slate-50 border border-slate-200/90 p-7 sm:p-9 flex flex-col justify-between card-elevated relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-navy-900/[0.03] rounded-bl-full pointer-events-none"></div>
+          
+          <div>
+            <div class="flex items-center justify-between gap-4 mb-6">
+              <div class="w-14 h-14 rounded-2xl bg-navy-900 text-gold-400 flex items-center justify-center shadow-lg">
+                <i data-lucide="book-open-check" class="w-7 h-7"></i>
+              </div>
+              <span class="px-3.5 py-1.5 rounded-full bg-navy-900/10 text-navy-900 text-xs font-bold uppercase tracking-wider">
+                Material Didático • PDF
+              </span>
+            </div>
+
+            <h3 class="font-display font-extrabold text-2xl text-navy-900">
+              1. Guia Prático Orçamentário (PDF)
+            </h3>
+            <p class="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed">
+              Material didático, visual e acessível, elaborado <strong class="text-navy-900">sem termos técnicos complicados</strong>, pensado para orientar qualquer pessoa desde o primeiro passo na organização financeira.
+            </p>
+
+            <div class="mt-6 pt-6 border-t border-slate-200">
+              <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Objetivos do Guia:</p>
+              <ul class="space-y-3 text-sm text-slate-700">
+                <li class="flex items-start gap-3">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+                  <span>Ensinar a organizar receitas e despesas de forma clara;</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+                  <span>Identificar e reduzir gastos invisíveis do dia a dia;</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+                  <span>Incentivar hábitos financeiros saudáveis e conscientes;</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+                  <span>Ensinar a importância da reserva de emergência;</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+                  <span>Apresentar um passo a passo para melhorar a organização financeira familiar.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mt-8 pt-4">
+            <button onclick="openModal('modalGuia')" class="w-full py-3.5 px-5 rounded-2xl bg-navy-900 hover:bg-navy-800 text-white font-display font-semibold text-sm flex items-center justify-center gap-2.5 shadow-md transition">
+              <i data-lucide="eye" class="w-4 h-4 text-gold-400"></i>
+              <span>Demonstrar Estrutura Didática do Guia</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- SOLUÇÃO 2: PLANILHA AUTOMATIZADA DE GESTÃO FINANCEIRA -->
+        <div class="rounded-3xl bg-gradient-to-br from-navy-900 to-navy-800 text-white p-7 sm:p-9 flex flex-col justify-between card-elevated shadow-xl relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-36 h-36 bg-emerald-500/10 rounded-bl-full pointer-events-none"></div>
+
+          <div>
+            <div class="flex items-center justify-between gap-4 mb-6">
+              <div class="w-14 h-14 rounded-2xl bg-emerald-500 text-navy-950 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                <i data-lucide="table-2" class="w-7 h-7"></i>
+              </div>
+              <span class="px-3.5 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold uppercase tracking-wider">
+                Excel / Google Sheets
+              </span>
+            </div>
+
+            <h3 class="font-display font-extrabold text-2xl text-white">
+              2. Planilha Automatizada de Gestão Financeira
+            </h3>
+            <p class="text-slate-300 text-sm sm:text-base mt-3 leading-relaxed">
+              Ferramenta prática desenvolvida em <strong class="text-white">Excel / Google Sheets</strong> que automatiza os cálculos essenciais e elimina a barreira da complexidade matemática no controle doméstico.
+            </p>
+
+            <div class="mt-6 pt-6 border-t border-white/10">
+              <p class="text-xs font-bold uppercase tracking-wider text-gold-400 mb-4">Funcionalidades Integradas:</p>
+              <div class="grid sm:grid-cols-2 gap-3 text-sm text-slate-200">
+                <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                  <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                  <span>Registro de receitas</span>
+                </div>
+                <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                  <i data-lucide="minus-circle" class="w-4 h-4 text-rose-400 shrink-0"></i>
+                  <span>Registro de despesas</span>
+                </div>
+                <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                  <i data-lucide="calculator" class="w-4 h-4 text-gold-400 shrink-0"></i>
+                  <span>Cálculo automático de saldos</span>
+                </div>
+                <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                  <i data-lucide="bar-chart-3" class="w-4 h-4 text-sky-400 shrink-0"></i>
+                  <span>Visualização do orçamento mensal</span>
+                </div>
+                <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                  <i data-lucide="search-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                  <span>Acompanhamento dos gastos</span>
+                </div>
+                <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                  <i data-lucide="home" class="w-4 h-4 text-gold-400 shrink-0"></i>
+                  <span>Melhor compreensão financeira familiar</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 pt-4">
+            <button onclick="openModal('modalPlanilha')" class="w-full py-3.5 px-5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-navy-950 font-display font-bold text-sm flex items-center justify-center gap-2.5 shadow-lg shadow-emerald-500/20 transition">
+              <i data-lucide="play-circle" class="w-4 h-4"></i>
+              <span>Simular Funcionamento da Planilha</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SEÇÃO 4 — EXECUÇÃO E PARCERIA ESTRATÉGICA                             -->
+  <!-- ===================================================================== -->
+  <section id="secao-4" data-slide="3" class="slide-section min-h-screen py-24 bg-slate-50 bg-grid-light flex items-center border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full reveal-section">
+      
+      <!-- Cabeçalho da Seção -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-navy-900 text-gold-400 text-xs font-semibold uppercase tracking-wider mb-3">
+            <span>Capítulo 03 • Execução e Parceria Estratégica</span>
+          </div>
+          <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-navy-900 tracking-tight">
+            Como o Projeto Chegou às Pessoas
+          </h2>
+          <p class="text-slate-600 mt-3 text-base sm:text-lg leading-relaxed">
+            A intervenção foi executada nos dias <strong class="text-navy-900">08/11 e 09/11</strong> combinando articulação estratégica em ambiente corporativo e atendimento direto na comunidade.
+          </p>
+        </div>
+
+        <div class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white border border-slate-200 shadow-sm shrink-0">
+          <i data-lucide="calendar-check" class="w-5 h-5 text-emerald-600"></i>
+          <span class="text-sm font-bold text-navy-900">Datas de Execução: 08/11 e 09/11</span>
+        </div>
+      </div>
+
+      <!-- Dois Pilares da Execução -->
+      <div class="grid md:grid-cols-2 gap-6 mb-12">
+        <!-- Pilar 1: Parceria Mercado Livre -->
+        <div class="bg-white rounded-3xl p-7 border border-slate-200/90 shadow-sm card-elevated">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-amber-400/20 text-amber-700 flex items-center justify-center shrink-0">
+              <i data-lucide="building-2" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Articulação Corporativa</span>
+              <h3 class="font-display font-bold text-xl text-navy-900">Parceria Estratégica — Mercado Livre</h3>
+            </div>
+          </div>
+          <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+            Foi realizada uma articulação com um <strong class="text-navy-900">colaborador interno do Mercado Livre</strong>, que possibilitou a apresentação mediada do projeto aos trabalhadores da empresa. Essa parceria foi fundamental para superar a dificuldade de acesso presencial ao ambiente corporativo e ampliar o alcance da iniciativa.
+          </p>
+        </div>
+
+        <!-- Pilar 2: Aplicação Doméstica -->
+        <div class="bg-white rounded-3xl p-7 border border-slate-200/90 shadow-sm card-elevated">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-700 flex items-center justify-center shrink-0">
+              <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Proximidade Comunitária</span>
+              <h3 class="font-display font-bold text-xl text-navy-900">Aplicação Doméstica</h3>
+            </div>
+          </div>
+          <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+            Também foram realizados <strong class="text-navy-900">atendimentos e orientações individualizadas</strong> para moradores da comunidade, auxiliando na utilização prática das ferramentas diretamente na rotina financeira familiar.
+          </p>
+        </div>
+      </div>
+
+      <!-- Galeria Interativa de Registros Fotográficos (Com Upload Local e Conformidade LGPD) -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+          <div>
+            <h3 class="font-display font-bold text-xl text-navy-900 flex items-center gap-2">
+              <i data-lucide="camera" class="w-5 h-5 text-emerald-600"></i>
+              <span>Registros Fotográficos da Intervenção</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">
+              Clique nos espaços reservados abaixo para carregar suas próprias fotografias durante a apresentação.
+            </p>
+          </div>
+
+          <!-- Aviso LGPD -->
+          <div class="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-navy-900 text-white text-xs max-w-md">
+            <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+            <span><strong>Conformidade LGPD:</strong> Registros com consentimento prévio, preservando rostos, nomes e dados pessoais.</span>
+          </div>
+        </div>
+
+      <!-- Galeria com Ajuste de Tamanho (Object-Contain) -->
+<!-- Galeria com Fotos Físicas Fixas -->
+<div class="grid md:grid-cols-3 gap-6">
+  
+  <!-- REGISTRO 01 -->
+  <div class="rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm flex flex-col">
+    <div class="h-64 w-full bg-slate-100 overflow-hidden">
+      <img src="image/registros/WhatsApp Image 2026-11-10 at 00.12.24.jpeg" alt="Apresentação no Mercado Livre" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+    </div>
+    <div class="p-5 flex-1">
+      <span class="text-[11px] font-bold uppercase tracking-wider text-amber-600">Registro 01</span>
+      <h4 class="font-display font-bold text-navy-900 text-base mt-1">Apresentação no Mercado Livre</h4>
+      <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">Exibição do Guia Prático e da Planilha Orçamentária na tela dentro do ambiente corporativo parceiro.</p>
+    </div>
+  </div>
+
+  <!-- REGISTRO 02 -->
+  <div class="rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm flex flex-col">
+    <div class="h-64 w-full bg-slate-100 overflow-hidden">
+      <img src="image/registros/WhatsApp Image 2026-11-10 at 00.12.11.jpeg" alt="Roda de Conversa com trabalhadores" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+    </div>
+    <div class="p-5 flex-1">
+      <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Registro 02</span>
+      <h4 class="font-display font-bold text-navy-900 text-base mt-1">Roda de Conversa</h4>
+      <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">Mediação realizada por colaborador interno junto aos trabalhadores, com diálogo coletivo e troca de experiências.</p>
+    </div>
+  </div>
+
+  <!-- REGISTRO 03 -->
+  <div class="rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm flex flex-col">
+    <div class="h-64 w-full bg-white flex items-center justify-center overflow-hidden p-2">
+      <img src="image/registros/WhatsApp Image 2026-11-11 at 20.51.53.jpeg" alt="Aplicação no Ambiente Doméstico" class="max-h-full max-w-full object-contain hover:scale-105 transition duration-500">
+    </div>
+    <div class="p-5 flex-1">
+      <span class="text-[11px] font-bold uppercase tracking-wider text-sky-600">Registro 03</span>
+      <h4 class="font-display font-bold text-navy-900 text-base mt-1">Aplicação no Ambiente Doméstico</h4>
+      <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">Participante da comunidade utilizando a planilha prática diretamente em sua residência na organização familiar.</p>
+    </div>
+  </div>
+
+</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SEÇÃO 5 — RESULTADOS E FEEDBACKS DA COMUNIDADE                        -->
+  <!-- ===================================================================== -->
+  <section id="secao-5" data-slide="4" class="slide-section min-h-screen py-24 bg-white flex items-center border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full reveal-section">
+      
+      <!-- Cabeçalho + Banner de Alcance -->
+      <div class="grid lg:grid-cols-12 gap-8 items-center mb-12">
+        <div class="lg:col-span-7">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold uppercase tracking-wider mb-3">
+            <span>Capítulo 04 • Resultados e Feedbacks</span>
+          </div>
+          <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-navy-900 tracking-tight">
+            Percepções e Impacto Gerado
+          </h2>
+          <p class="text-slate-600 mt-3 text-base sm:text-lg leading-relaxed">
+            A escuta ativa após a apresentação e a aplicação prática permitiu mapear os avanços conquistados, os desafios observados e as oportunidades de evolução do projeto.
+          </p>
+        </div>
+
+        <!-- Indicador de Alcance Estimado -->
+        <div class="lg:col-span-5">
+          <div class="rounded-3xl bg-gradient-to-r from-navy-900 to-navy-800 text-white p-6 sm:p-7 shadow-xl border border-gold-500/30 flex items-center gap-5">
+            <div class="w-16 h-16 rounded-2xl bg-gold-500/20 border border-gold-400/40 text-gold-400 flex items-center justify-center shrink-0">
+              <i data-lucide="users-round" class="w-8 h-8"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Alcance Estimado</span>
+              <div class="font-display font-extrabold text-3xl sm:text-4xl text-white mt-0.5">
+                20 a 25
+              </div>
+              <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                <strong>Beneficiários diretos</strong>, com potencial de multiplicação do conhecimento dentro das famílias.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Três Colunas Estruturadas: Pontos Fortes, Desafios e Possibilidades Futuras -->
+      <div class="grid lg:grid-cols-3 gap-7">
+        
+        <!-- Card 1: Pontos Fortes Identificados -->
+        <div class="rounded-3xl bg-emerald-50/60 border border-emerald-200/80 p-7 card-elevated">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center mb-5 shadow-md shadow-emerald-600/20">
+            <i data-lucide="thumbs-up" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-display font-bold text-xl text-navy-900 mb-4">
+            Pontos Fortes Identificados
+          </h3>
+          <ul class="space-y-3.5 text-sm text-slate-700">
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 rounded-full bg-emerald-600 mt-2 shrink-0"></span>
+              <span><strong>Linguagem acessível do guia:</strong> compreensão imediata sem barreiras técnicas.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 rounded-full bg-emerald-600 mt-2 shrink-0"></span>
+              <span><strong>Facilidade de compreensão da planilha automatizada:</strong> visualização clara de entradas, saídas e saldos.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 rounded-full bg-emerald-600 mt-2 shrink-0"></span>
+              <span><strong>Aplicabilidade das ferramentas no cotidiano:</strong> uso imediato na rotina doméstica.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 rounded-full bg-emerald-600 mt-2 shrink-0"></span>
+              <span><strong>Maior compreensão sobre organização financeira:</strong> clareza sobre prioridades e reserva.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Card 2: Desafios e Aprendizados -->
+        <div class="rounded-3xl bg-amber-50/60 border border-amber-200/80 p-7 card-elevated">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500 text-navy-950 flex items-center justify-center mb-5 shadow-md shadow-amber-500/20">
+            <i data-lucide="compass" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-display font-bold text-xl text-navy-900 mb-4">
+            Desafios e Aprendizados
+          </h3>
+          <ul class="space-y-3.5 text-sm text-slate-700">
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 rounded-full bg-amber-600 mt-2 shrink-0"></span>
+              <span><strong>Insegurança inicial</strong> de alguns participantes com planilhas digitais no celular ou computador.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 rounded-full bg-amber-600 mt-2 shrink-0"></span>
+              <span><strong>Necessidade de tornar as ferramentas ainda mais intuitivas</strong> para usuários com pouca familiaridade tecnológica.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 rounded-full bg-amber-600 mt-2 shrink-0"></span>
+              <span><strong>Importância de adaptar o conteúdo</strong> para diferentes realidades financeiras e estruturas familiares.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Card 3: Possibilidades Futuras -->
+        <div class="rounded-3xl bg-slate-50 border border-slate-200 p-7 card-elevated">
+          <div class="w-12 h-12 rounded-2xl bg-navy-900 text-gold-400 flex items-center justify-center mb-5 shadow-md">
+            <i data-lucide="rocket" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-display font-bold text-xl text-navy-900 mb-4">
+            Possibilidades Futuras
+          </h3>
+          <ul class="space-y-3.5 text-sm text-slate-700">
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 rounded-full bg-navy-900 mt-2 shrink-0"></span>
+              <span><strong>Versões adaptadas</strong> especificamente para pessoas com <strong>renda variável</strong> ou semanal.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 rounded-full bg-navy-900 mt-2 shrink-0"></span>
+              <span><strong>Cards educativos rápidos</strong> para compartilhamento ágil pelo <strong>WhatsApp</strong>.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 rounded-full bg-navy-900 mt-2 shrink-0"></span>
+              <span><strong>Ampliação das orientações financeiras</strong> para outras famílias e núcleos comunitários.</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SEÇÃO 6 — LIMITAÇÕES E CONCLUSÃO                                      -->
+  <!-- ===================================================================== -->
+  <section id="secao-6" data-slide="5" class="slide-section min-h-screen py-24 bg-slate-50 bg-grid-light flex items-center border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full reveal-section">
+      
+      <!-- Cabeçalho -->
+      <div class="max-w-3xl mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-navy-900 text-gold-400 text-xs font-semibold uppercase tracking-wider mb-3">
+          <span>Capítulo 05 • Limitações e Conclusão</span>
+        </div>
+        <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-navy-900 tracking-tight">
+          Conclusões do Itinerário Extensionista
+        </h2>
+      </div>
+
+      <div class="grid lg:grid-cols-12 gap-8 items-stretch mb-10">
+        
+        <!-- Limitações Encontradas (5 colunas) -->
+        <div class="lg:col-span-5 bg-white rounded-3xl p-7 sm:p-8 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-5">
+              <div class="p-2.5 rounded-xl bg-slate-100 text-navy-900">
+                <i data-lucide="alert-circle" class="w-6 h-6"></i>
+              </div>
+              <h3 class="font-display font-bold text-xl text-navy-900">Limitações Encontradas</h3>
+            </div>
+
+            <div class="space-y-5">
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+                <h4 class="font-bold text-sm text-navy-900 flex items-center gap-2">
+                  <i data-lucide="lock" class="w-4 h-4 text-amber-600"></i>
+                  <span>Acesso Físico ao Ambiente Corporativo</span>
+                </h4>
+                <p class="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">
+                  Restrição de acesso físico ao ambiente corporativo do Mercado Livre, superada de forma criativa e eficaz por meio da parceria estratégica com colaborador interno.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+                <h4 class="font-bold text-sm text-navy-900 flex items-center gap-2">
+                  <i data-lucide="clock" class="w-4 h-4 text-amber-600"></i>
+                  <span>Horizonte Temporal de Acompanhamento</span>
+                </h4>
+                <p class="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">
+                  Prazo limitado do cronograma acadêmico para acompanhar a consolidação contínua dos hábitos financeiros e a formação de reservas de emergência a longo prazo.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Síntese Conclusiva (7 colunas) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl p-7 sm:p-8 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-5">
+              <div class="p-2.5 rounded-xl bg-emerald-50 text-emerald-700">
+                <i data-lucide="award" class="w-6 h-6"></i>
+              </div>
+              <h3 class="font-display font-bold text-xl text-navy-900">Síntese e Impacto Social</h3>
+            </div>
+
+            <div class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+              <p>
+                A experiência demonstrou que a união entre o <strong class="text-navy-900">conhecimento técnico da Administração</strong> e ferramentas simples e acessíveis pode transformar a maneira como as famílias lidam com o próprio dinheiro.
+              </p>
+              <p>
+                A educação financeira não deve ser um privilégio, mas uma <strong class="text-emerald-700">oportunidade acessível a todos</strong>.
+              </p>
+              <p>
+                Ao proporcionar conhecimento, planejamento e autonomia, o projeto contribui diretamente para combater o endividamento, reduzir vulnerabilidades e promover inclusão social, em total alinhamento com o <strong class="text-ods10">ODS 10 — Redução das Desigualdades</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-5 border-t border-slate-100 flex flex-wrap gap-2">
+            <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">Autonomia Financeira</span>
+            <span class="px-3 py-1 rounded-full bg-navy-900/5 text-navy-900 text-xs font-semibold">Gestão Orçamentária</span>
+            <span class="px-3 py-1 rounded-full bg-pink-50 text-ods10 text-xs font-semibold">ODS 10 • Inclusão Social</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Frase de Impacto em Destaque -->
+      <div class="rounded-3xl bg-gradient-to-r from-navy-950 via-navy-900 to-navy-800 p-8 sm:p-10 text-white shadow-2xl border-l-8 border-gold-500 relative overflow-hidden">
+        <i data-lucide="quote" class="w-16 h-16 text-gold-500/15 absolute top-4 right-6 pointer-events-none"></i>
+        <blockquote class="font-serif italic text-xl sm:text-2xl lg:text-3xl text-white leading-relaxed max-w-4xl">
+          “Educação financeira não é sobre quanto dinheiro você ganha, mas sobre como o conhecimento pode transformar a maneira como você utiliza os recursos que possui.”
+        </blockquote>
+        <p class="text-xs uppercase tracking-widest text-gold-400 font-semibold mt-4">
+          Síntese do Projeto de Extensão • Administração
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SEÇÃO 7 — TELA FINAL DE AGRADECIMENTO                                 -->
+  <!-- ===================================================================== -->
+  <section id="secao-7" data-slide="6" class="slide-section min-h-screen py-24 bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800 text-white flex items-center relative overflow-hidden bg-grid-pattern">
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[32rem] h-[32rem] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center relative z-10 reveal-section">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-xl shadow-emerald-500/25 mb-6">
+        <i data-lucide="check-circle" class="w-8 h-8"></i>
+      </div>
+
+      <span class="block text-xs uppercase tracking-[0.2em] text-gold-400 font-bold mb-3">
+        Encerramento da Apresentação
+      </span>
+
+      <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight">
+        Muito Obrigada!
+      </h2>
+
+      <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mt-4 leading-relaxed">
+        Agradeço aos docentes, à banca avaliadora, ao colaborador parceiro e a todos os participantes da comunidade que tornaram esta intervenção extensionista possível.
+      </p>
+
+      <!-- Cartão Institucional Final -->
+      <div class="mt-10 p-6 sm:p-8 rounded-3xl bg-white/5 border border-white/15 backdrop-blur-md max-w-2xl mx-auto text-left sm:text-center space-y-3">
+        <p class="text-gold-400 font-display font-bold text-lg">
+          Universidade Cruzeiro do Sul
+        </p>
+        <p class="text-white font-semibold text-base">
+          Curso de Bacharelado em Administração
+        </p>
+        <div class="h-px bg-white/10 w-24 mx-auto my-3"></div>
+        <p class="text-sm text-slate-300">
+          Estudante: <strong id="studentNameFooter" class="text-white">Maria Eduarda Ianella Da Silva</strong>
+        </p>
+        <p class="text-xs text-emerald-400 font-semibold uppercase tracking-wider">
+          Projeto de Extensão Universitária • ODS 10 • Novembro de 2026
+        </p>
+      </div>
+
+      <div class="mt-10 flex flex-wrap justify-center gap-4">
+        <button onclick="goToSlide(0)" class="px-7 py-3.5 rounded-2xl bg-white text-navy-900 hover:bg-slate-100 font-display font-bold text-sm flex items-center gap-2.5 shadow-xl transition">
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+          <span>Voltar ao Início</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rodapé Acadêmico Institucional -->
+  <footer class="bg-navy-950 text-slate-400 py-8 border-t border-white/10 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+        <span class="text-slate-200 font-semibold">Universidade Cruzeiro do Sul</span>
+        <span>• Curso de Administração</span>
+      </div>
+      <div>
+        Apresentação Acadêmica — Itinerário Extensionista (ODS 10) • Novembro de 2026
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- MODAIS INTERATIVOS (DEMONSTRAÇÃO DIDÁTICA DAS FERRAMENTAS E NOME)     -->
+  <!-- ===================================================================== -->
+
+  <!-- Modal 1: Estrutura Didática do Guia Prático Orçamentário (PDF) -->
+  <div id="modalGuia" class="fixed inset-0 z-50 hidden items-center justify-center bg-navy-950/80 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative animate-fadeIn">
+      <button onclick="closeModal('modalGuia')" class="absolute top-5 right-5 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 rounded-2xl bg-navy-900 text-gold-400 flex items-center justify-center">
+          <i data-lucide="book-open" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Prévia Didática</span>
+          <h3 class="font-display font-bold text-xl text-navy-900">Guia Prático Orçamentário (PDF)</h3>
+        </div>
+      </div>
+
+      <p class="text-sm text-slate-600 mb-5 leading-relaxed">
+        Estrutura visual desenvolvida em linguagem simples e acessível para facilitar o aprendizado imediato das famílias:
+      </p>
+
+      <div class="space-y-3 text-sm">
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+          <span class="px-2.5 py-0.5 rounded-lg bg-navy-900 text-white font-bold text-xs mt-0.5">Etapa 1</span>
+          <div>
+            <strong class="text-navy-900 block">Mapeamento da Renda Líquida</strong>
+            <span class="text-xs text-slate-600">Como identificar exatamente quanto entra no orçamento mensal da casa.</span>
+          </div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+          <span class="px-2.5 py-0.5 rounded-lg bg-navy-900 text-white font-bold text-xs mt-0.5">Etapa 2</span>
+          <div>
+            <strong class="text-navy-900 block">Classificação de Gastos Fixos, Variáveis e Invisíveis</strong>
+            <span class="text-xs text-slate-600">Técnica prática para enxergar pequenos gastos recorrentes que comprometem o saldo.</span>
+          </div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+          <span class="px-2.5 py-0.5 rounded-lg bg-navy-900 text-white font-bold text-xs mt-0.5">Etapa 3</span>
+          <div>
+            <strong class="text-navy-900 block">Construção da Reserva de Emergência</strong>
+            <span class="text-xs text-slate-600">Passo a passo gradual para criar proteção financeira e evitar empréstimos com juros abusivos.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end">
+        <button onclick="closeModal('modalGuia')" class="px-5 py-2.5 rounded-xl bg-navy-900 text-white text-xs font-semibold hover:bg-navy-800 transition">
+          Fechar Demonstração
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Simulador Interativo da Planilha Automatizada -->
+  <div id="modalPlanilha" class="fixed inset-0 z-50 hidden items-center justify-center bg-navy-950/80 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative">
+      <button onclick="closeModal('modalPlanilha')" class="absolute top-5 right-5 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-11 h-11 rounded-2xl bg-emerald-600 text-white flex items-center justify-center">
+          <i data-lucide="calculator" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Demonstração Interativa</span>
+          <h3 class="font-display font-bold text-xl text-navy-900">Planilha Automatizada de Gestão Financeira</h3>
+        </div>
+      </div>
+
+      <p class="text-xs sm:text-sm text-slate-600 mb-5">
+        Teste abaixo como a ferramenta calcula automaticamente o saldo mensal e orienta a tomada de decisão financeira:
+      </p>
+
+      <!-- Campos de Simulação -->
+      <div class="grid sm:grid-cols-3 gap-4 mb-5">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Receita Mensal (R$)</label>
+          <input type="number" id="simReceita" value="2500" min="0" step="50" oninput="updateSpreadsheetSim()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-navy-900 focus:outline-none focus:border-emerald-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Despesas Fixas (R$)</label>
+          <input type="number" id="simFixas" value="1400" min="0" step="50" oninput="updateSpreadsheetSim()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-navy-900 focus:outline-none focus:border-emerald-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Despesas Variáveis (R$)</label>
+          <input type="number" id="simVariaveis" value="650" min="0" step="50" oninput="updateSpreadsheetSim()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-navy-900 focus:outline-none focus:border-emerald-500" />
+        </div>
+      </div>
+
+      <!-- Resultado Automático -->
+      <div class="rounded-2xl bg-slate-900 text-white p-5 grid sm:grid-cols-3 gap-4 items-center">
+        <div>
+          <span class="text-[11px] uppercase tracking-wider text-slate-400 block">Total de Despesas</span>
+          <strong id="simTotalDespesas" class="text-lg font-display font-bold text-rose-400">R$ 2.050,00</strong>
+        </div>
+        <div>
+          <span class="text-[11px] uppercase tracking-wider text-slate-400 block">Saldo Automático</span>
+          <strong id="simSaldo" class="text-xl font-display font-extrabold text-emerald-400">R$ 450,00</strong>
+        </div>
+        <div>
+          <span class="text-[11px] uppercase tracking-wider text-slate-400 block">Status Orçamentário</span>
+          <span id="simStatus" class="inline-block mt-1 px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 text-xs font-bold">
+            Positivo • Apto p/ Reserva
+          </span>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end">
+        <button onclick="closeModal('modalPlanilha')" class="px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-500 transition">
+          Concluir Demonstração
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Editar Nome da Estudante (Caso deseje ajustar na hora) -->
+  <div id="modalEditName" class="fixed inset-0 z-50 hidden items-center justify-center bg-navy-950/80 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 relative">
+      <h3 class="font-display font-bold text-lg text-navy-900 mb-2">Identificação da Estudante</h3>
+      <p class="text-xs text-slate-500 mb-4">Confirme ou ajuste o nome completo exibido na capa e no encerramento:</p>
+      <input type="text" id="editNameInput" value="Maria Eduarda Ianella Da Silva" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-navy-900 focus:outline-none focus:border-emerald-500 mb-4" />
+      <div class="flex justify-end gap-2">
+        <button onclick="closeModal('modalEditName')" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 text-xs font-semibold">Cancelar</button>
+        <button onclick="saveStudentName()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-semibold">Salvar Nome</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- JAVASCRIPT — NAVEGAÇÃO, GRÁFICOS, GALERIA E INTERATIVIDADE            -->
+  <!-- ===================================================================== -->
+  <script>
+    // Inicializar ícones Lucide
+    lucide.createIcons();
+
+    // Controle de Slides / Seções
+    const sections = Array.from(document.querySelectorAll('.slide-section'));
+    const navPills = Array.from(document.querySelectorAll('.nav-pill'));
+    const progressBar = document.getElementById('topProgressBar');
+    const slideCounterBadge = document.getElementById('slideCounterBadge');
+    const prevSlideBtn = document.getElementById('prevSlideBtn');
+    const nextSlideBtn = document.getElementById('nextSlideBtn');
+    let currentSlideIndex = 0;
+
+    function updateSlideUI(index) {
+      currentSlideIndex = index;
+      const total = sections.length;
+      const percent = ((index + 1) / total) * 100;
+
+      progressBar.style.width = `${percent}%`;
+      slideCounterBadge.textContent = `Slide ${index + 1} / ${total}`;
+
+      prevSlideBtn.disabled = index === 0;
+      nextSlideBtn.disabled = index === total - 1;
+
+      navPills.forEach((pill, i) => {
+        if (i === index) {
+          pill.classList.remove('text-slate-300', 'hover:text-white', 'hover:bg-white/5');
+          pill.classList.add('bg-emerald-600', 'text-white');
+        } else {
+          pill.classList.add('text-slate-300', 'hover:text-white', 'hover:bg-white/5');
+          pill.classList.remove('bg-emerald-600', 'text-white');
+        }
+      });
+    }
+
+    function goToSlide(index) {
+      if (index < 0 || index >= sections.length) return;
+      sections[index].scrollIntoView({ behavior: 'smooth' });
+      updateSlideUI(index);
+    }
+
+    function nextSlide() {
+      if (currentSlideIndex < sections.length - 1) {
+        goToSlide(currentSlideIndex + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlideIndex > 0) {
+        goToSlide(currentSlideIndex - 1);
+      }
+    }
+
+    // Navegação via Teclado (Setas Esquerda e Direita)
+    document.addEventListener('keydown', (e) => {
+      // Ignorar se estiver digitando em um input
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'Escape') {
+        ['modalGuia', 'modalPlanilha', 'modalEditName'].forEach(closeModal);
+      }
+    });
+
+    // Observer para detectar seção visível durante rolagem manual e animar entrada
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const slideIdx = Number(entry.target.dataset.slide);
+          updateSlideUI(slideIdx);
+
+          const revealEl = entry.target.querySelector('.reveal-section');
+          if (revealEl) revealEl.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.35 });
+
+    sections.forEach(sec => sectionObserver.observe(sec));
+
+    // Modo Tela Cheia (Fullscreen API)
+    function toggleFullscreen() {
+      const icon = document.getElementById('fullscreenIcon');
+      const text = document.getElementById('fullscreenText');
+
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().then(() => {
+          icon.setAttribute('data-lucide', 'minimize-2');
+          if (text) text.textContent = 'Sair da Tela Cheia';
+          lucide.createIcons();
+        }).catch(() => {});
+      } else {
+        document.exitFullscreen().then(() => {
+          icon.setAttribute('data-lucide', 'maximize-2');
+          if (text) text.textContent = 'Tela Cheia';
+          lucide.createIcons();
+        }).catch(() => {});
+      }
+    }
+
+    // Gráfico de Diagnóstico Comunitário (Chart.js)
+    window.addEventListener('DOMContentLoaded', () => {
+      const ctx = document.getElementById('diagnosticChart');
+      if (ctx) {
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: [
+              'Sem registro formal de despesas',
+              'Sem reserva de emergência'
+            ],
+            datasets: [
+              {
+                label: 'Diagnóstico Crítico (%)',
+                data: [57.2, 38.1],
+                backgroundColor: ['#F59E0B', '#E11D48'],
+                borderRadius: 10,
+                barThickness: 36
+              },
+              {
+                label: 'Demais participantes (%)',
+                data: [42.8, 61.9],
+                backgroundColor: ['#0A192F', '#10B981'],
+                borderRadius: 10,
+                barThickness: 36
+              }
+            ]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  font: { family: 'Inter', size: 12, weight: '600' },
+                  color: '#334155',
+                  usePointStyle: true
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: (context) => ` ${context.dataset.label}: ${context.parsed.x.toString().replace('.', ',')}%`
+                }
+              }
+            },
+            scales: {
+              x: {
+                stacked: true,
+                max: 100,
+                ticks: {
+                  callback: (val) => val + '%',
+                  font: { family: 'Inter', size: 11 }
+                },
+                grid: { color: '#F1F5F9' }
+              },
+              y: {
+                stacked: true,
+                ticks: {
+                  font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' },
+                  color: '#0A192F'
+                },
+                grid: { display: false }
+              }
+            }
+          }
+        });
+      }
+    });
+
+    // Upload Local de Fotos para Galeria (Sem servidor, 100% privado no navegador)
+    function handlePhotoUpload(event, containerId, actionsId) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = `
+          <img src="${e.target.result}" alt="Registro fotográfico da intervenção" class="w-full h-full object-cover" />
+          <div class="absolute bottom-2 right-2 px-2.5 py-1 rounded-lg bg-navy-950/80 text-white text-[10px] font-semibold backdrop-blur-sm">
+            Registro Carregado
+          </div>
+        `;
+        container.classList.remove('p-6');
+        document.getElementById(actionsId).classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetPhotoSlot(containerId, actionsId, inputId, labelText) {
+      const container = document.getElementById(containerId);
+      document.getElementById(inputId).value = '';
+      container.classList.add('p-6');
+      container.innerHTML = `
+        <div class="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-200 flex items-center justify-center text-navy-900 group-hover:scale-105 group-hover:text-emerald-600 transition mb-3">
+          <i data-lucide="image-plus" class="w-6 h-6"></i>
+        </div>
+        <p class="text-sm font-semibold text-navy-900">${labelText}</p>
+        <p class="text-xs text-slate-500 mt-1">Clique para selecionar o arquivo</p>
+      `;
+      document.getElementById(actionsId).classList.add('hidden');
+      lucide.createIcons();
+    }
+
+    // Controle de Modais
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('hidden');
+        el.classList.add('flex');
+      }
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('hidden');
+        el.classList.remove('flex');
+      }
+    }
+
+    // Simulador da Planilha Automatizada
+    function formatBRL(value) {
+      return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function updateSpreadsheetSim() {
+      const receita = parseFloat(document.getElementById('simReceita').value) || 0;
+      const fixas = parseFloat(document.getElementById('simFixas').value) || 0;
+      const variaveis = parseFloat(document.getElementById('simVariaveis').value) || 0;
+
+      const totalDespesas = fixas + variaveis;
+      const saldo = receita - totalDespesas;
+
+      document.getElementById('simTotalDespesas').textContent = formatBRL(totalDespesas);
+      const saldoEl = document.getElementById('simSaldo');
+      const statusEl = document.getElementById('simStatus');
+
+      saldoEl.textContent = formatBRL(saldo);
+
+      if (saldo > 0) {
+        saldoEl.className = 'text-xl font-display font-extrabold text-emerald-400';
+        statusEl.className = 'inline-block mt-1 px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 text-xs font-bold';
+        statusEl.textContent = 'Positivo • Apto p/ Reserva';
+      } else if (saldo === 0) {
+        saldoEl.className = 'text-xl font-display font-extrabold text-amber-400';
+        statusEl.className = 'inline-block mt-1 px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 text-xs font-bold';
+        statusEl.textContent = 'Equilibrado • Atenção aos Gastos';
+      } else {
+        saldoEl.className = 'text-xl font-display font-extrabold text-rose-400';
+        statusEl.className = 'inline-block mt-1 px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 text-xs font-bold';
+        statusEl.textContent = 'Déficit • Revisar Variáveis';
+      }
+    }
+
+    // Edição rápida do nome da estudante
+    function openEditNameModal() {
+      document.getElementById('editNameInput').value = document.getElementById('studentNameDisplay').textContent;
+      openModal('modalEditName');
+    }
+
+    function saveStudentName() {
+      const newName = document.getElementById('editNameInput').value.trim();
+      if (newName) {
+        document.getElementById('studentNameDisplay').textContent = newName;
+        document.getElementById('studentNameFooter').textContent = newName;
+      }
+      closeModal('modalEditName');
+    }
+  </script>
+</body>
+</html>
